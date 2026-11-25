@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Produk {
+  id        Int             @id @default(autoincrement())
+  nama      String
+  harga     Int
+  deskripsi String
+  gambar    String
+  keranjang ItemKeranjang[]
+}
+
+model ItemKeranjang {
+  id       Int    @id @default(autoincrement())
+  produkId Int    @unique
+  qty      Int    @default(1)
+  produk   Produk @relation(fields: [produkId], references: [id], onDelete: Cascade)
+}
+
+model Pesanan {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  alamat    String
+  metode    String
+  total     Int
+  createdAt DateTime @default(now())
+}
